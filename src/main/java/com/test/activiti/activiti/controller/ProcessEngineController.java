@@ -49,12 +49,13 @@ public class ProcessEngineController{
     @RequestMapping("create")
     public Object create(){
 //        ProcessDefinition definition = repositoryService.createProcessDefinitionQuery().singleResult();
-        StartFormData startFormData = formService.getStartFormData("process:8:35004");
+        StartFormData startFormData = formService.getStartFormData("process:1:7");
         List<FormProperty> formProperties = startFormData.getFormProperties();
         ProcessDefinition pd = startFormData.getProcessDefinition();
         Map map = new HashMap();
-        map.put("testName","testValue");
-        runtimeService.startProcessInstanceByKey("process",map);
+        map.put("userid","李四");
+        map.put("test","testValue");
+        runtimeService.startProcessInstanceById("process:1:7",map);
 //        mapform.put("list", formProperties);
 //        mapform.put("pd", pd);
         return ToWeb.buildResult().refresh();
@@ -76,6 +77,16 @@ public class ProcessEngineController{
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process", variables);
         System.out.println("pid:"+processInstance.getId()+",activitiId:"+processInstance.getActivityId());
 //        System.out.println("taskService:"+taskService.createTaskQuery().taskAssignee("张三").list().size());
+        return ToWeb.buildResult().refresh();
+    }
+
+    @RequestMapping("queryTaskForm")
+    public Object queryTaskForm(){
+//        System.out.println("taskService:"+taskService.createTaskQuery().taskAssignee("李四").list().size());
+        if (taskService.createTaskQuery().taskAssignee("李四").list().size() != 0){
+            String executionId = taskService.createTaskQuery().taskAssignee("李四").list().get(0).getExecutionId();
+            System.out.println("test");
+        }
         return ToWeb.buildResult().refresh();
     }
 
