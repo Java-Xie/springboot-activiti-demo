@@ -9,6 +9,7 @@ import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +37,9 @@ public class ProcessEngineController{
     @Autowired
     FormService formService;
 
+    @Autowired
+    IdentityService identityService;
+
     @RequestMapping("test")
     public Object test(@RequestParam String id){
         System.out.println("id:"+id);
@@ -49,13 +53,14 @@ public class ProcessEngineController{
     @RequestMapping("create")
     public Object create(){
 //        ProcessDefinition definition = repositoryService.createProcessDefinitionQuery().singleResult();
-        StartFormData startFormData = formService.getStartFormData("process:1:7");
+        StartFormData startFormData = formService.getStartFormData("testprocess:2:5004");
         List<FormProperty> formProperties = startFormData.getFormProperties();
         ProcessDefinition pd = startFormData.getProcessDefinition();
         Map map = new HashMap();
-        map.put("userid","李四");
-        map.put("test","testValue");
-        runtimeService.startProcessInstanceById("process:1:7",map);
+        map.put("test","testValueTask");
+        formService.submitStartFormData("testprocess:2:5004",map);//启动流程，提交表单
+//        ProcessInstance processInstance = runtimeService.startProcessInstanceById("testprocess:2:5004", map);
+//        System.out.println(processInstance);
 //        mapform.put("list", formProperties);
 //        mapform.put("pd", pd);
         return ToWeb.buildResult().refresh();
@@ -63,7 +68,7 @@ public class ProcessEngineController{
 
     @RequestMapping("run")
     public Object run(){
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process");
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("userProcess");
         System.out.println("pid:"+processInstance.getId()+",activitiId:"+processInstance.getActivityId());
 //        System.out.println("taskService:"+taskService.createTaskQuery().taskAssignee("张三").list().size());
         return ToWeb.buildResult().refresh();
@@ -83,10 +88,21 @@ public class ProcessEngineController{
     @RequestMapping("queryTaskForm")
     public Object queryTaskForm(){
 //        System.out.println("taskService:"+taskService.createTaskQuery().taskAssignee("李四").list().size());
-        if (taskService.createTaskQuery().taskAssignee("李四").list().size() != 0){
-            String executionId = taskService.createTaskQuery().taskAssignee("李四").list().get(0).getExecutionId();
+//        if (taskService.createTaskQuery().taskAssignee("张三").list().size() != 0){
+            //查询代理人的task任务
+//            Task task = taskService.createTaskQuery().taskAssignee("张三").list().get(0);
+            //查询候选组的task任务
+//            Task task = taskService.createTaskQuery().taskCandidateGroup("user").singleResult();
+            //查询候选人的task任务
+            Task task = taskService.createTaskQuery().taskCandidateUser("张三").singleResult();
+        //获取variable的值
+//            Map<String, Object> variables = runtimeService.getVariables(task.getExecutionId());
+            //修改variable表的值
+//            runtimeService.setVariable(task.getExecutionId(),"test","newTestValue");
+//            TaskFormData taskFormData = formService.getTaskFormData(task.getId());//根据任务ID拿取表单数据
+//            TaskFormData taskFormData = formService.getTaskFormData(task.getId());
             System.out.println("test");
-        }
+//        }
         return ToWeb.buildResult().refresh();
     }
 
@@ -105,7 +121,13 @@ public class ProcessEngineController{
 
     @RequestMapping("completeTask")
     public Object completeTask(){
-        taskService.complete(taskService.createTaskQuery().taskAssignee("李四").list().get(0).getId());
+        Task task = taskService.createTaskQuery().taskCandidateGroup("user").singleResult();
+        if (task != null) {
+            Map map = new HashMap();
+            map.put("bool",true);
+            taskService.complete(task.getId(),map);
+        }
+//        taskService.complete(taskService.createTaskQuery().taskAssignee("张三").list().get(0).getId());
         System.out.println("完成任务");
         return ToWeb.buildResult().refresh();
     }
