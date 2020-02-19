@@ -67,6 +67,7 @@ var KisBpmAssignmentPopupCtrl = [ '$scope', function($scope) {
     
     var groupValueIndex = 1;
     $scope.addCandidateGroupValue = function(index) {
+    	console.log("test方法"+index+"--"+$scope.assignment.candidateGroups);
         $scope.assignment.candidateGroups.splice(index + 1, 0, {value: 'value ' + groupValueIndex++});
     };
 

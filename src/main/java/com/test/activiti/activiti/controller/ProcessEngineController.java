@@ -121,11 +121,15 @@ public class ProcessEngineController{
 
     @RequestMapping("completeTask")
     public Object completeTask(){
-        Task task = taskService.createTaskQuery().taskCandidateGroup("user").singleResult();
-        if (task != null) {
+        Task task = taskService.createTaskQuery().taskCandidateGroup("user3").list().get(0);
+        /*if (task != null) {
+            System.out.println(task.getId());
             Map map = new HashMap();
             map.put("bool",true);
-            taskService.complete(task.getId(),map);
+            taskService.complete(task.getId(), map);
+        }*/
+        if (task != null) {
+            taskService.complete(task.getId());
         }
 //        taskService.complete(taskService.createTaskQuery().taskAssignee("张三").list().get(0).getId());
         System.out.println("完成任务");
