@@ -50,14 +50,13 @@ var KisBpmAssignmentPopupCtrl = [ '$scope', '$http', function($scope, $http) {
 
 	$http({method: 'GET', url: '/getGroupList'}).
 		success(function (data, status, headers, config) {
-			console.log(data);
 			$scope.groups = data.data.obj;
-			$scope.assignment.candidateGroups.some(function(cValue){
-				let bool = $scope.groups.some(function(gValue){
-					return cValue === gValue;
+			$scope.groups.some(function(gValue){
+				gValue.bool = $scope.assignment.candidateGroups.some(function(cValue){
+					return cValue.value === gValue.groupId;
 				})
-				console.log(bool);
 			})
+			console.log(data);
 		}).
 		error(function (data, status, headers, config) {
 			console.log(data);
