@@ -1,4 +1,7 @@
-
+<!-- 操作完节点属性后展示的样式 -->
+<!-- 如果文字不超过20个则全部展示出来 -->
 <span ng-if="!property.noValue">{{property.value|limitTo:20}}</span>
+<!-- 如果文字超过20个则展示... -->
 <span ng-if="!property.noValue && property.value != null && property.value.length > 20">...</span>
+<!-- 如果是非文字则展示对应的属性 -->
 <span ng-if="property.noValue" translate>PROPERTY.EMPTY</span>

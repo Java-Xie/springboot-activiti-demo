@@ -1,3 +1,4 @@
+<!--选择代理的组件-->
 <div class="modal" ng-controller="KisBpmAssignmentPopupCtrl">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -31,11 +32,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-6">
-                        <div ng-repeat="Group in assignment.Groups">
-                            <span>{{'PROPERTY.ASSIGNMENT.CANDIDATE_GROUPS' | translate}}</span>
+                    <div id="groups" class="col-xs-6">
+                        <div ng-repeat="group in groups">
+                            <span>{{group.groupId}}</span>
+                            <i class="glyphicon glyphicon-plus clickable-property" ng-click="addCandidateGroupValue($index,group.groupId)"></i>
                         </div>
-
+                        <!--<span>{{groups.groupId}}<i class="glyphicon glyphicon-plus clickable-property" ng-click="addCandidateGroupValue($index,'user1')"></i></span>
+                        <span>user2<i class="glyphicon glyphicon-plus clickable-property" ng-click="addCandidateGroupValue($index,'user2')"></i></span>
+                        <span>user3</span>-->
                     </div>
                 </div>
             

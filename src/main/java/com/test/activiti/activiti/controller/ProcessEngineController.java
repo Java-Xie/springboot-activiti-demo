@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,17 @@ public class ProcessEngineController{
 //        int i = runtimeService.getProcessInstanceEvents(id).size();
 //        System.out.println("i:"+i);
         return ToWeb.buildResult().refresh();
+    }
+
+    @RequestMapping("getGroupList")
+    public Object getGroupList(){
+        List<Map<String,Object>> mapList = new ArrayList<Map<String,Object>>();
+        for (int i = 1; i <= 3; i++) {
+            Map map = new HashMap();
+            map.put("groupId","user"+i);
+            mapList.add(map);
+        }
+        return ToWeb.buildResult().setObjData(mapList);
     }
 
     @RequestMapping("create")

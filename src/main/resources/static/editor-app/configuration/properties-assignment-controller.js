@@ -32,7 +32,7 @@ var KisBpmAssignmentCtrl = [ '$scope', '$modal', function($scope, $modal) {
     $modal(opts);
 }];
 
-var KisBpmAssignmentPopupCtrl = [ '$scope', function($scope) {
+var KisBpmAssignmentPopupCtrl = [ '$scope', '$http', function($scope, $http) {
     	
     // Put json representing assignment on scope
     if ($scope.property.value !== undefined && $scope.property.value !== null
@@ -44,12 +44,26 @@ var KisBpmAssignmentPopupCtrl = [ '$scope', function($scope) {
         $scope.assignment = {};
     }
 
-    if ($scope.assignment.candidateUsers == undefined || $scope.assignment.candidateUsers.length == 0)
-    {
+    if ($scope.assignment.candidateUsers == undefined || $scope.assignment.candidateUsers.length == 0) {
     	$scope.assignment.candidateUsers = [{value: ''}];
     }
-    
-    // Click handler for + button after enum value
+
+	$http({method: 'GET', url: '/getGroupList'}).
+		success(function (data, status, headers, config) {
+			console.log(data);
+			$scope.groups = data.data.obj;
+			$scope.assignment.candidateGroups.some(function(cValue){
+				let bool = $scope.groups.some(function(gValue){
+					return cValue === gValue;
+				})
+				console.log(bool);
+			})
+		}).
+		error(function (data, status, headers, config) {
+			console.log(data);
+		});
+
+	// Click handler for + button after enum value
     var userValueIndex = 1;
     $scope.addCandidateUserValue = function(index) {
         $scope.assignment.candidateUsers.splice(index + 1, 0, {value: 'value ' + userValueIndex++});
@@ -65,10 +79,8 @@ var KisBpmAssignmentPopupCtrl = [ '$scope', function($scope) {
     	$scope.assignment.candidateGroups = [{value: ''}];
     }
     
-    var groupValueIndex = 1;
-    $scope.addCandidateGroupValue = function(index) {
-    	console.log("test方法"+index+"--"+$scope.assignment.candidateGroups);
-        $scope.assignment.candidateGroups.splice(index + 1, 0, {value: 'value ' + groupValueIndex++});
+    $scope.addCandidateGroupValue = function(index, value) {
+        $scope.assignment.candidateGroups.splice(index + 1, 0, {value: value});
     };
 
     // Click handler for - button after enum value
