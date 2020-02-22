@@ -28,18 +28,14 @@
                             <div ng-repeat="candidateGroup in assignment.candidateGroups">
                                 <input id="groupField" class="form-control" type="text" ng-model="candidateGroup.value" />
                                 <i class="glyphicon glyphicon-minus clickable-property" ng-click="removeCandidateGroupValue($index)"></i>
-                                <i ng-if="$index == (assignment.candidateGroups.length - 1)" class="glyphicon glyphicon-plus clickable-property" ng-click="addCandidateGroupValue($index)"></i>
                             </div>
                         </div>
                     </div>
                     <div id="groups" class="col-xs-6">
                         <div ng-repeat="group in groups">
                             <span>{{group.groupId}}</span>
-                            <i class="glyphicon glyphicon-plus clickable-property" ng-click="addCandidateGroupValue($index,group.groupId)"></i>
+                            <i ng-if="!group.bool" class="glyphicon glyphicon-plus clickable-property" ng-click="addCandidateGroupValue($index,group)"></i>
                         </div>
-                        <!--<span>{{groups.groupId}}<i class="glyphicon glyphicon-plus clickable-property" ng-click="addCandidateGroupValue($index,'user1')"></i></span>
-                        <span>user2<i class="glyphicon glyphicon-plus clickable-property" ng-click="addCandidateGroupValue($index,'user2')"></i></span>
-                        <span>user3</span>-->
                     </div>
                 </div>
             

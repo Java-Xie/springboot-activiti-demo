@@ -54,8 +54,9 @@ public class ProcessEngineController{
     @RequestMapping("getGroupList")
     public Object getGroupList(){
         List<Map<String,Object>> mapList = new ArrayList<Map<String,Object>>();
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= 10; i++) {
             Map map = new HashMap();
+            map.put("Id",i);
             map.put("groupId","user"+i);
             mapList.add(map);
         }

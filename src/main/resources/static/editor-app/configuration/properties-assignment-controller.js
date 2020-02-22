@@ -33,11 +33,11 @@ var KisBpmAssignmentCtrl = [ '$scope', '$modal', function($scope, $modal) {
 }];
 
 var KisBpmAssignmentPopupCtrl = [ '$scope', '$http', function($scope, $http) {
-    	
+
     // Put json representing assignment on scope
     if ($scope.property.value !== undefined && $scope.property.value !== null
         && $scope.property.value.assignment !== undefined
-        && $scope.property.value.assignment !== null) 
+        && $scope.property.value.assignment !== null)
     {
         $scope.assignment = $scope.property.value.assignment;
     } else {
@@ -72,18 +72,24 @@ var KisBpmAssignmentPopupCtrl = [ '$scope', '$http', function($scope, $http) {
     $scope.removeCandidateUserValue = function(index) {
         $scope.assignment.candidateUsers.splice(index, 1);
     };
-    
+
     if ($scope.assignment.candidateGroups == undefined || $scope.assignment.candidateGroups.length == 0)
     {
     	$scope.assignment.candidateGroups = [{value: ''}];
     }
-    
+
     $scope.addCandidateGroupValue = function(index, value) {
-        $scope.assignment.candidateGroups.splice(index + 1, 0, {value: value});
+		value.bool = true;
+        $scope.assignment.candidateGroups.splice(index + 1, 0, {value: value.groupId});
     };
 
     // Click handler for - button after enum value
     $scope.removeCandidateGroupValue = function(index) {
+		$scope.groups.some(function(gValue){
+			if (gValue.groupId === $scope.assignment.candidateGroups[index].value){
+				gValue.bool = false;
+			}
+		})
         $scope.assignment.candidateGroups.splice(index, 1);
     };
 
@@ -92,7 +98,7 @@ var KisBpmAssignmentPopupCtrl = [ '$scope', '$http', function($scope, $http) {
         $scope.property.value = {};
         handleAssignmentInput($scope);
         $scope.property.value.assignment = $scope.assignment;
-        
+
         $scope.updatePropertyInModel($scope.property);
         $scope.close();
     };
@@ -103,7 +109,7 @@ var KisBpmAssignmentPopupCtrl = [ '$scope', '$http', function($scope, $http) {
     	$scope.property.mode = 'read';
     	$scope.$hide();
     };
-    
+
     var handleAssignmentInput = function($scope) {
     	if ($scope.assignment.candidateUsers)
     	{
@@ -120,18 +126,18 @@ var KisBpmAssignmentPopupCtrl = [ '$scope', '$http', function($scope, $http) {
 	        		toRemoveIndexes[toRemoveIndexes.length] = i;
 	        	}
 	        }
-	        
+
 	        for (var i = 0; i < toRemoveIndexes.length; i++)
 	        {
 	        	$scope.assignment.candidateUsers.splice(toRemoveIndexes[i], 1);
 	        }
-	        
+
 	        if (emptyUsers)
 	        {
 	        	$scope.assignment.candidateUsers = undefined;
 	        }
     	}
-        
+
     	if ($scope.assignment.candidateGroups)
     	{
 	        var emptyGroups = true;
@@ -147,12 +153,12 @@ var KisBpmAssignmentPopupCtrl = [ '$scope', '$http', function($scope, $http) {
 	        		toRemoveIndexes[toRemoveIndexes.length] = i;
 	        	}
 	        }
-	        
+
 	        for (var i = 0; i < toRemoveIndexes.length; i++)
 	        {
 	        	$scope.assignment.candidateGroups.splice(toRemoveIndexes[i], 1);
 	        }
-	        
+
 	        if (emptyGroups)
 	        {
 	        	$scope.assignment.candidateGroups = undefined;
